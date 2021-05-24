@@ -9,4 +9,8 @@ PGSQL_PASSWORD = "123123"
 
 WEB3_HTTP_URL = f"http://192.168.3.2:8546"
 
-ERC20_ABI = 'utils/abi/erc20_abi.json'
+import os
+curPath = os.path.abspath(os.path.dirname(__file__))
+
+ERC20_ABI = f'{curPath}/utils/abi/erc20_abi.json'
+DECIMAL = f'{curPath}/utils/decimal/token_decimal.json'

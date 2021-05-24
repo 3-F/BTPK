@@ -257,6 +257,19 @@ class TokenInfoDB(TokenDB):
             logger.info(f"There is no token in address:{address} in token_info database.")
             return None
 
+    def get_all_decimal(self):
+        sql_command = (f"""
+        SELECT address, decimal
+        FROM token_info
+        """)
+        try:
+            with self.conn:
+                with self.conn.cursor() as cur:
+                    cur.execute(sql_command)
+                    return cur.fetchall()
+        except psycopg2.ProgrammingError  as e:
+            return None
+
     def get_decimal_by_address(self, address):
         return self.get_by_address(field='decimal', address=address)
 

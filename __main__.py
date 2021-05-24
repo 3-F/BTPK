@@ -27,7 +27,6 @@ def _main(args=None):
 
     # Instancce APIs (Now only have CoinGecko API)
     coin_gecko_api = APICoinGecko()
-    coin_gecko_api.api = CoinGeckoAPI()
     
     # Instance ApiPool
     price_keeper.api_pool = ApiPool()
@@ -40,7 +39,7 @@ def _main(args=None):
     # price_keeper.refresh_info()
     # price_keeper.refresh_price()
     schedule.every().day.at("01:00").do(price_keeper.refresh_info)
-    schedule.every(100).minutes.do(price_keeper.refresh_price)
+    schedule.every(10).minutes.do(price_keeper.refresh_price)
 
     while True:
         schedule.run_pending()

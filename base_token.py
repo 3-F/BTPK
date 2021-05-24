@@ -9,12 +9,13 @@ import json
 class BaseToken:
 
     w3 = Web3(Web3.HTTPProvider(WEB3_HTTP_URL, request_kwargs={'timeout': 6000}))
-    erc20_abi = json.load(open(ERC20_ABI))
+    with open(ERC20_ABI) as f:
+        erc20_abi = json.load(f)
     info_db = TokenInfoDB()
     price_db = TokenPriceDB()
     def __init__(self, contract_address, name=None,
                 symbol=None, type=None, decimal=None, 
-                price=None, tvl=None, total_supply=None, 
+                price=None, price_time=None, tvl=None, total_supply=None, 
                 uri=None, api_tag=None, ex_tag=None):
         self.contract_address = contract_address
         self.name = name
@@ -22,6 +23,7 @@ class BaseToken:
         self.decimal = decimal
         self.type = type
         self.price = price  # Latest price
+        self.price_time = price_time    # price update time
         self.tvl = tvl
         self.total_supply = total_supply
         self.uri = uri

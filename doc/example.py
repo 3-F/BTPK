@@ -4,7 +4,7 @@ sys.path.append('/home/proj/price_keeper')
 from base_token import BaseToken
 
 if __name__ == "__main__":
-    token = BaseToken(contract_address='0x016ee7373248a80bde1fd6baa001311d233b3cfa')
+    token = BaseToken(contract_address='0x187eff9690e1f1a61d578c7c492296eaab82701a')
     status, price, time = token.get_price_until()
     print('status =', status, 'price =', price, 'time =', time)
     status, price, time = token.get_price_until(time=datetime.datetime(2021, 5, 21, 12, 0, 0))

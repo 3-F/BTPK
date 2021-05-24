@@ -15,7 +15,7 @@ class PriceKeeper:
         self.info_db = None
         self.price_db = None
         self.api_pool = None
-        self.tokens = []
+        # self.tokens = []
         
     def refresh_info(self):
         """ Update token_info table """
@@ -24,10 +24,9 @@ class PriceKeeper:
         apis = self.api_pool.get_api_list()
         for api in apis:
             # TODO it need almost 1 min to update all data
-            self.tokens = api.get_token_list()
             token_exists = self.info_db.get_address_list()   
             # 先查数据库token_info，看是否已经记录address
-            for token in self.tokens:
+            for token in api.token_list:
                 # addr = self.info_db.get_address_by_name(coin['name'])
                 if token_exists is not None and token.contract_address in token_exists:
                     continue
@@ -42,8 +41,7 @@ class PriceKeeper:
         apis = self.api_pool.get_api_list()
         for api in apis:
             # TODO it need almost 1 min to update all data
-            self.tokens = api.get_token_list()
-            for token in self.tokens:
+            for token in api.token_list:
                 self.price_db.insert(self.token_price(token))
                 logger.info(f'[INSERT]Table:token_price Token:{token.name} Address:{token.contract_address}')
         
@@ -60,7 +58,7 @@ class PriceKeeper:
         # fields = ['address', 'price', 'time', 'status', 'tvl', 'total_supply',  'origin']
         status = 'Unknown'
         price = token.price
-        time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
+        time = token.price_time
         if price is not None:
             status = 'Active'
         return (token.contract_address, price, time, status, token.tvl, token.total_supply,  token.api_tag, token.ex_tag)
