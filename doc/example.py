@@ -1,6 +1,8 @@
 import datetime
+import os
+curPath = os.path.abspath(os.path.dirname(__file__))
 import sys
-sys.path.append('/home/proj/price_keeper')
+sys.path.append(curPath[:-4])
 from base_token import BaseToken
 
 if __name__ == "__main__":
