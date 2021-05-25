@@ -74,9 +74,9 @@ class APICoinGecko(TokenApi):
             if address in self.decimal_map:
                 base_token.decimal = self.decimal_map[address]
                 base_token.type = 'ERC-20'
-            else:
-                decimal = base_token.get_decimal()
-                self.decimal_map[address] = decimal
+            # else:
+            #     decimal = base_token.get_decimal()
+            #     self.decimal_map[address] = decimal
 
             self.token_list.append(base_token)
             self.valid_token_ids.append(token["id"])
@@ -102,9 +102,12 @@ class APICoinGecko(TokenApi):
                     if 'usd' not in prices_info[id] or not prices_info[id]['usd']:
                         continue
                     token = self.token_map[self.id_to_address[id]]
-                    token.price = prices_info[id]['usd']
+                    last_update = token.price_time
                     timestamp = prices_info[id]['last_updated_at']
-                    token.price_time = time.strftime("%Y-%m%d %H:%M:%S", time.localtime(timestamp))
+                    this_update = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(timestamp))
+                    if last_update is None or this_update > last_update:
+                        token.price_time = this_update
+                        token.price = prices_info[id]['usd']
                 start += step
             except requests.exceptions.HTTPError as e:
                 if e == "429 Client Error":

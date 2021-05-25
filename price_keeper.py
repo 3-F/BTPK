@@ -24,6 +24,7 @@ class PriceKeeper:
         apis = self.api_pool.get_api_list()
         for api in apis:
             # TODO it need almost 1 min to update all data
+            api.refresh_token_list()
             token_exists = self.info_db.get_address_list()   
             # 先查数据库token_info，看是否已经记录address
             for token in api.token_list:
@@ -41,6 +42,7 @@ class PriceKeeper:
         apis = self.api_pool.get_api_list()
         for api in apis:
             # TODO it need almost 1 min to update all data
+            api.refresh_token_list()
             for token in api.token_list:
                 self.price_db.insert(self.token_price(token))
                 logger.info(f'[INSERT]Table:token_price Token:{token.name} Address:{token.contract_address}')
@@ -59,8 +61,14 @@ class PriceKeeper:
         status = 'Unknown'
         price = token.price
         time = token.price_time
+        if time is None:
+            status = 'Failed'
+            time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
+            
         if price is not None:
             status = 'Active'
+        else:
+            status = 'Failed'
         return (token.contract_address, price, time, status, token.tvl, token.total_supply,  token.api_tag, token.ex_tag)
 
 if __name__ == "__main__":
